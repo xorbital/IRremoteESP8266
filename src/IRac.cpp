@@ -138,7 +138,7 @@ void IRac::initState(stdAc::state_t *state) {
             25, true,  // 25 degrees Celsius
             stdAc::fanspeed_t::kAuto, stdAc::swingv_t::kOff,
             stdAc::swingh_t::kOff, false, false, false, false, false, false,
-            false, -1, -1);
+            false, false, -1, -1);
 }
 
 /// Get the current internal A/C climate state.
@@ -2575,6 +2575,7 @@ bool IRac::sendAc(const decode_type_t vendor, const int16_t model,
                   const stdAc::fanspeed_t fan,
                   const stdAc::swingv_t swingv, const stdAc::swingh_t swingh,
                   const bool quiet, const bool turbo, const bool econo,
+                  const bool breeze,
                   const bool light, const bool filter, const bool clean,
                   const bool beep, const int16_t sleep, const int16_t clock) {
   stdAc::state_t to_send;
