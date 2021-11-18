@@ -107,6 +107,7 @@ namespace stdAc {
     bool quiet;
     bool turbo;
     bool econo;
+    bool breeze;
     bool light;
     bool filter;
     bool clean;
@@ -134,12 +135,6 @@ enum fujitsu_ac_remote_model_t {
 enum gree_ac_remote_model_t {
   YAW1F = 1,  // (1) Ultimate, EKOKAI, RusClimate (Default)
   YBOFB,     // (2) Green, YBOFB2, YAPOF3
-};
-
-/// HAIER_AC176 A/C model numbers
-enum haier_ac176_remote_model_t {
-  V9014557_A = 1,  // (1) V9014557 Remote in "A" setting. (Default)
-  V9014557_B,      // (2) V9014557 Remote in "B" setting.
 };
 
 /// HITACHI_AC1 A/C model numbers
@@ -766,10 +761,6 @@ class IRsend {
                  const uint16_t nbytes = kRhossStateLength,
                  const uint16_t repeat = kRhossDefaultRepeat);
 #endif  // SEND_RHOSS
-#if SEND_AIRTON
-  void sendAirton(const uint64_t data, const uint16_t nbits = kAirtonBits,
-                  const uint16_t repeat = kAirtonDefaultRepeat);
-#endif  // SEND_AIRTON
 
  protected:
 #ifdef UNIT_TEST

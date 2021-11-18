@@ -88,6 +88,7 @@ IRac::IRac(const uint16_t pin, const bool inverted, const bool use_modulation) {
 /// @param[in] quiet Run the device in quiet/silent mode.
 /// @param[in] turbo Run the device in turbo/powerful mode.
 /// @param[in] econo Run the device in economical mode.
+/// @param[in] breeze Run the device in breeze mode.
 /// @param[in] light Turn on the LED/Display mode.
 /// @param[in] filter Turn on the (ion/pollen/etc) filter mode.
 /// @param[in] clean Turn on the self-cleaning mode. e.g. Mould, dry filters etc
@@ -104,6 +105,7 @@ void IRac::initState(stdAc::state_t *state,
                      const stdAc::fanspeed_t fan,
                      const stdAc::swingv_t swingv, const stdAc::swingh_t swingh,
                      const bool quiet, const bool turbo, const bool econo,
+                     const bool breeze,
                      const bool light, const bool filter, const bool clean,
                      const bool beep, const int16_t sleep,
                      const int16_t clock) {
@@ -119,6 +121,7 @@ void IRac::initState(stdAc::state_t *state,
   state->quiet = quiet;
   state->turbo = turbo;
   state->econo = econo;
+  state->breeze = breeze;
   state->light = light;
   state->filter = filter;
   state->clean = clean;
@@ -1114,7 +1117,6 @@ void IRac::haier(IRHaierAC *ac,
 #if SEND_HAIER_AC176
 /// Send a Haier 176 bit A/C message with the supplied settings.
 /// @param[in, out] ac A Ptr to an IRHaierAC176 object to use.
-/// @param[in] model The A/C model to use.
 /// @param[in] on The power setting.
 /// @param[in] mode The operation mode setting.
 /// @param[in] celsius Temperature units. True is Celsius, False is Fahrenheit.
@@ -1126,7 +1128,7 @@ void IRac::haier(IRHaierAC *ac,
 /// @param[in] quiet Run the device in quiet mode.
 /// @param[in] filter Turn on the (ion/pollen/etc) filter mode.
 /// @param[in] sleep Nr. of minutes for sleep mode. -1 is Off, >= 0 is on.
-void IRac::haier176(IRHaierAC176 *ac, const haier_ac176_remote_model_t model,
+void IRac::haier176(IRHaierAC176 *ac,
                     const bool on, const stdAc::opmode_t mode,
                     const bool celsius, const float degrees,
                     const stdAc::fanspeed_t fan,
@@ -1135,7 +1137,6 @@ void IRac::haier176(IRHaierAC176 *ac, const haier_ac176_remote_model_t model,
                     const bool turbo, const bool quiet, const bool filter,
                     const int16_t sleep) {
   ac->begin();
-  ac->setModel(model);
   ac->setMode(ac->convertMode(mode));
   ac->setUseFahrenheit(!celsius);
   ac->setTemp(degrees);
@@ -1824,7 +1825,7 @@ void IRac::panasonic32(IRPanasonicAc32 *ac,
 /// @param[in] econo Run the device in economical mode.
 /// @param[in] light Turn on the LED/Display mode.
 /// @param[in] filter Turn on the (ion/pollen/etc) filter mode.
-/// @param[in] clean Toggle the self-cleaning mode. e.g. Mould, dry filters etc
+/// @param[in] clean Turn on the self-cleaning mode. e.g. Mould, dry filters etc
 /// @param[in] beep Toggle beep setting for receiving IR messages.
 /// @param[in] sleep Nr. of minutes for sleep mode. <= 0 is Off, > 0 is on.
 /// @param[in] prevpower The power setting from the previous A/C state.
@@ -1853,8 +1854,9 @@ void IRac::samsung(IRSamsungAc *ac,
   ac->setPowerful(turbo);  // FYI, `setEcono(true)` will override this.
   ac->setDisplay(light);
   ac->setEcono(econo);
+  ac->setBreeze(breeze);
   ac->setIon(filter);
-  ac->setClean(clean);  // Toggle
+  ac->setClean(clean);
   ac->setBeep(beep);  // Toggle
   ac->setSleepTimer((sleep <= 0) ? 0 : sleep);
   // No Clock setting available.
@@ -2529,7 +2531,6 @@ stdAc::state_t IRac::handleToggles(const stdAc::state_t desired,
         break;
       case decode_type_t::SAMSUNG_AC:
         result.beep = desired.beep ^ prev->beep;
-        result.clean = desired.clean ^ prev->clean;
         break;
       default:
         {};
@@ -2554,6 +2555,7 @@ stdAc::state_t IRac::handleToggles(const stdAc::state_t desired,
 /// @param[in] quiet Run the device in quiet/silent mode.
 /// @param[in] turbo Run the device in turbo/powerful mode.
 /// @param[in] econo Run the device in economical mode.
+/// @param[in] breeze Run the device in breeze mode.
 /// @param[in] light Turn on the LED/Display mode.
 /// @param[in] filter Turn on the (ion/pollen/etc) filter mode.
 /// @param[in] clean Turn on the self-cleaning mode. e.g. Mould, dry filters etc
@@ -2570,11 +2572,12 @@ bool IRac::sendAc(const decode_type_t vendor, const int16_t model,
                   const stdAc::fanspeed_t fan,
                   const stdAc::swingv_t swingv, const stdAc::swingh_t swingh,
                   const bool quiet, const bool turbo, const bool econo,
+                  const bool breeze,
                   const bool light, const bool filter, const bool clean,
                   const bool beep, const int16_t sleep, const int16_t clock) {
   stdAc::state_t to_send;
   initState(&to_send, vendor, model, power, mode, degrees, celsius, fan, swingv,
-            swingh, quiet, turbo, econo, light, filter, clean, beep, sleep,
+            swingh, quiet, turbo, econo, breeze, light, filter, clean, beep, sleep,
             clock);
   return this->sendAc(to_send, &to_send);
 }
@@ -2798,9 +2801,9 @@ bool IRac::sendAc(const stdAc::state_t desired, const stdAc::state_t *prev) {
     case HAIER_AC176:
     {
       IRHaierAC176 ac(_pin, _inverted, _modulation);
-      haier176(&ac, (haier_ac176_remote_model_t)send.model, send.power,
-               send.mode, send.celsius, send.degrees, send.fanspeed,
-               send.swingv, send.swingh, send.turbo, send.filter, send.sleep);
+      haier176(&ac, send.power, send.mode, send.celsius, send.degrees,
+               send.fanspeed, send.swingv, send.swingh, send.turbo,
+               send.filter, send.sleep);
       break;
     }
 #endif  // SEND_HAIER_AC176
@@ -2991,7 +2994,7 @@ bool IRac::sendAc(const stdAc::state_t desired, const stdAc::state_t *prev) {
     {
       IRSamsungAc ac(_pin, _inverted, _modulation);
       samsung(&ac, send.power, send.mode, degC, send.fanspeed, send.swingv,
-              send.swingh, send.quiet, send.turbo, send.econo, send.light,
+              send.swingh, send.quiet, send.turbo, send.econo, send.breeze, send.light,
               send.filter, send.clean, send.beep, send.sleep,
               prev_power, prev_sleep);
       break;
@@ -3158,7 +3161,7 @@ bool IRac::cmpStates(const stdAc::state_t a, const stdAc::state_t b) {
       a.mode != b.mode || a.degrees != b.degrees || a.celsius != b.celsius ||
       a.fanspeed != b.fanspeed || a.swingv != b.swingv ||
       a.swingh != b.swingh || a.quiet != b.quiet || a.turbo != b.turbo ||
-      a.econo != b.econo || a.light != b.light || a.filter != b.filter ||
+      a.econo != b.econo || a.breeze != b.breeze || a.light != b.light || a.filter != b.filter ||
       a.clean != b.clean || a.beep != b.beep || a.sleep != b.sleep;
 }
 
@@ -3319,18 +3322,12 @@ stdAc::swingh_t IRac::strToSwingH(const char *str,
 /// @param[in] str A Ptr to a C-style string to be converted.
 /// @param[in] def The enum to return if no conversion was possible.
 /// @return The equivalent enum.
-/// @note After adding a new model you should update modelToStr() too.
 int16_t IRac::strToModel(const char *str, const int16_t def) {
   // Gree
   if (!STRCASECMP(str, kYaw1fStr)) {
     return gree_ac_remote_model_t::YAW1F;
   } else if (!STRCASECMP(str, kYbofbStr)) {
     return gree_ac_remote_model_t::YBOFB;
-  // Haier models
-  } else if (!STRCASECMP(str, kV9014557AStr)) {
-    return haier_ac176_remote_model_t::V9014557_A;
-  } else if (!STRCASECMP(str, kV9014557BStr)) {
-    return haier_ac176_remote_model_t::V9014557_B;
   // HitachiAc1 models
   } else if (!STRCASECMP(str, kRlt0541htaaStr)) {
     return hitachi_ac1_remote_model_t::R_LT0541_HTA_A;

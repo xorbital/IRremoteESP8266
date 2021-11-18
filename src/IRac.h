@@ -64,6 +64,7 @@ class IRac {
                         const stdAc::swingv_t swingv,
                         const stdAc::swingh_t swingh,
                         const bool quiet, const bool turbo, const bool econo,
+                        const bool breeze,
                         const bool light, const bool filter, const bool clean,
                         const bool beep, const int16_t sleep,
                         const int16_t clock);
@@ -76,6 +77,7 @@ class IRac {
               const bool celsius, const stdAc::fanspeed_t fan,
               const stdAc::swingv_t swingv, const stdAc::swingh_t swingh,
               const bool quiet, const bool turbo, const bool econo,
+              const bool breeze,
               const bool light, const bool filter, const bool clean,
               const bool beep, const int16_t sleep = -1,
               const int16_t clock = -1);
@@ -261,11 +263,11 @@ void electra(IRElectraAc *ac,
 #endif  // SEND_HAIER_AC
 #if SEND_HAIER_AC176
   void haier176(IRHaierAC176 *ac,
-                const haier_ac176_remote_model_t model, const bool on,
-                const stdAc::opmode_t mode, const bool celsius,
-                const float degrees, const stdAc::fanspeed_t fan,
-                const stdAc::swingv_t swingv, const stdAc::swingh_t swingh,
-                const bool turbo, const bool quiet, const bool filter,
+                const bool on, const stdAc::opmode_t mode,
+                const bool celsius, const float degrees,
+                const stdAc::fanspeed_t fan, const stdAc::swingv_t swingv,
+                const stdAc::swingh_t swingh, const bool turbo,
+                const bool quiet, const bool filter,
                 const int16_t sleep = -1);
 #endif  // SEND_HAIER_AC176
 #if SEND_HAIER_AC_YRW02
@@ -406,6 +408,7 @@ void electra(IRElectraAc *ac,
                const stdAc::fanspeed_t fan,
                const stdAc::swingv_t swingv, const stdAc::swingh_t swingh,
                const bool quiet, const bool turbo, const bool econo,
+               const bool breeze,
                const bool light, const bool filter, const bool clean,
                const bool beep, const int16_t sleep = -1,
                const bool prevpower = true, const int16_t prevsleep = -1,
