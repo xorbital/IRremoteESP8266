@@ -107,6 +107,7 @@ namespace stdAc {
     bool quiet;
     bool turbo;
     bool econo;
+    bool breeze;
     bool light;
     bool filter;
     bool clean;
