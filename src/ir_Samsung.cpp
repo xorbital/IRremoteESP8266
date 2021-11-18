@@ -599,17 +599,17 @@ bool IRSamsungAc::getBeep(void) const { return _.BeepToggle; }
 /// @param[in] on true, the setting is on. false, the setting is off.
 void IRSamsungAc::setBeep(const bool on) { _.BeepToggle = on; }
 
-/// Get the Clean toggle setting of the A/C.
+/// Get the Clean setting of the A/C.
 /// @return true, the setting is on. false, the setting is off.
 bool IRSamsungAc::getClean(void) const {
-  return _.CleanToggle10 && _.CleanToggle11;
+  return _.Clean10 && _.Clean11;
 }
 
-/// Set the Clean toggle setting of the A/C.
+/// Set the Clean setting of the A/C.
 /// @param[in] on true, the setting is on. false, the setting is off.
 void IRSamsungAc::setClean(const bool on) {
-  _.CleanToggle10 = on;
-  _.CleanToggle11 = on;
+  _.Clean10 = on;
+  _.Clean11 = on;
 }
 
 /// Get the Quiet setting of the A/C.
@@ -646,7 +646,8 @@ void IRSamsungAc::setPowerful(const bool on) {
     setQuiet(false);  // Powerful 'on' is mutually exclusive to Quiet.
   } else {
     // Turning off Powerful mode sets fan speed to Auto if we were in Turbo mode
-    if (_.Fan == kSamsungAcFanTurbo) setFan(kSamsungAcFanAuto);
+    // Actually, don't do that.
+    // if (_.Fan == kSamsungAcFanTurbo) setFan(kSamsungAcFanAuto);
   }
 }
 
@@ -929,7 +930,7 @@ String IRSamsungAc::toString(void) const {
   result += addBoolToString(getSwing(), kSwingVStr);
   result += addBoolToString(getSwingH(), kSwingHStr);
   result += addToggleToString(_.BeepToggle, kBeepStr);
-  result += addToggleToString(getClean(), kCleanStr);
+  result += addBoolToString(getClean(), kCleanStr);
   result += addBoolToString(getQuiet(), kQuietStr);
   result += addBoolToString(getPowerful(), kPowerfulStr);
   result += addBoolToString(getEcono(), kEconoStr);
