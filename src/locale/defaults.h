@@ -550,6 +550,12 @@
 #ifndef D_STR_YBOFB
 #define D_STR_YBOFB "YBOFB"
 #endif  // D_STR_YBOFB
+#ifndef D_STR_V9014557_A
+#define D_STR_V9014557_A "V9014557-A"
+#endif  // D_STR_V9014557_A
+#ifndef D_STR_V9014557_B
+#define D_STR_V9014557_B "V9014557-B"
+#endif  // D_STR_V9014557_B
 #ifndef D_STR_RLT0541HTA_A
 #define D_STR_RLT0541HTA_A "R-LT0541-HTA-A"
 #endif  // D_STR_RLT0541HTA_A
@@ -663,6 +669,9 @@
 #endif  // D_STR_DG11J191
 
 // Protocols Names
+#ifndef D_STR_AIRTON
+#define D_STR_AIRTON "AIRTON"
+#endif  // D_STR_AIRTON
 #ifndef D_STR_AIRWELL
 #define D_STR_AIRWELL "AIRWELL"
 #endif  // D_STR_AIRWELL

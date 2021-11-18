@@ -228,6 +228,8 @@ IRTEXT_CONST_STRING(kBitsStr, D_STR_BITS);  ///< "Bits"
 // Model Names
 IRTEXT_CONST_STRING(kYaw1fStr, D_STR_YAW1F);  ///< "YAW1F"
 IRTEXT_CONST_STRING(kYbofbStr, D_STR_YBOFB);  ///< "YBOFB"
+IRTEXT_CONST_STRING(kV9014557AStr, D_STR_V9014557_A);  ///< "V9014557-A"
+IRTEXT_CONST_STRING(kV9014557BStr, D_STR_V9014557_B);  ///< "V9014557-B"
 IRTEXT_CONST_STRING(kRlt0541htaaStr, D_STR_RLT0541HTA_A);  ///< "R-LT0541-HTA-A"
 IRTEXT_CONST_STRING(kRlt0541htabStr, D_STR_RLT0541HTA_B);  ///< "R-LT0541-HTA-B"
 IRTEXT_CONST_STRING(kArrah2eStr, D_STR_ARRAH2E);  ///< "ARRAH2E"
@@ -379,6 +381,7 @@ IRTEXT_CONST_BLOB_DECL(kAllProtocolNamesStr) {
     D_STR_BOSE "\x0"
     D_STR_ARRIS "\x0"
     D_STR_RHOSS "\x0"
+    D_STR_AIRTON "\x0"
     ///< New protocol strings should be added just above this line.
     "\x0"  ///< This string requires double null termination.
 };
