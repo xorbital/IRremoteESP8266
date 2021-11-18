@@ -64,6 +64,7 @@ class IRac {
                         const stdAc::swingv_t swingv,
                         const stdAc::swingh_t swingh,
                         const bool quiet, const bool turbo, const bool econo,
+                        const bool breeze,
                         const bool light, const bool filter, const bool clean,
                         const bool beep, const int16_t sleep,
                         const int16_t clock);
@@ -76,6 +77,7 @@ class IRac {
               const bool celsius, const stdAc::fanspeed_t fan,
               const stdAc::swingv_t swingv, const stdAc::swingh_t swingh,
               const bool quiet, const bool turbo, const bool econo,
+              const bool breeze,
               const bool light, const bool filter, const bool clean,
               const bool beep, const int16_t sleep = -1,
               const int16_t clock = -1);
@@ -406,6 +408,7 @@ void electra(IRElectraAc *ac,
                const stdAc::fanspeed_t fan,
                const stdAc::swingv_t swingv, const stdAc::swingh_t swingh,
                const bool quiet, const bool turbo, const bool econo,
+               const bool breeze,
                const bool light, const bool filter, const bool clean,
                const bool beep, const int16_t sleep = -1,
                const bool prevpower = true, const int16_t prevsleep = -1,
