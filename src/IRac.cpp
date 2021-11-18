@@ -88,6 +88,7 @@ IRac::IRac(const uint16_t pin, const bool inverted, const bool use_modulation) {
 /// @param[in] quiet Run the device in quiet/silent mode.
 /// @param[in] turbo Run the device in turbo/powerful mode.
 /// @param[in] econo Run the device in economical mode.
+/// @param[in] breeze Run the device in breeze mode.
 /// @param[in] light Turn on the LED/Display mode.
 /// @param[in] filter Turn on the (ion/pollen/etc) filter mode.
 /// @param[in] clean Turn on the self-cleaning mode. e.g. Mould, dry filters etc
@@ -104,6 +105,7 @@ void IRac::initState(stdAc::state_t *state,
                      const stdAc::fanspeed_t fan,
                      const stdAc::swingv_t swingv, const stdAc::swingh_t swingh,
                      const bool quiet, const bool turbo, const bool econo,
+                     const bool breeze,
                      const bool light, const bool filter, const bool clean,
                      const bool beep, const int16_t sleep,
                      const int16_t clock) {
@@ -119,6 +121,7 @@ void IRac::initState(stdAc::state_t *state,
   state->quiet = quiet;
   state->turbo = turbo;
   state->econo = econo;
+  state->breeze = breeze;
   state->light = light;
   state->filter = filter;
   state->clean = clean;
@@ -1853,6 +1856,7 @@ void IRac::samsung(IRSamsungAc *ac,
   ac->setPowerful(turbo);  // FYI, `setEcono(true)` will override this.
   ac->setDisplay(light);
   ac->setEcono(econo);
+  ac->setBreeze(breeze);
   ac->setIon(filter);
   ac->setClean(clean);  // Toggle
   ac->setBeep(beep);  // Toggle
@@ -2554,6 +2558,7 @@ stdAc::state_t IRac::handleToggles(const stdAc::state_t desired,
 /// @param[in] quiet Run the device in quiet/silent mode.
 /// @param[in] turbo Run the device in turbo/powerful mode.
 /// @param[in] econo Run the device in economical mode.
+/// @param[in] breeze Run the device in breeze mode.
 /// @param[in] light Turn on the LED/Display mode.
 /// @param[in] filter Turn on the (ion/pollen/etc) filter mode.
 /// @param[in] clean Turn on the self-cleaning mode. e.g. Mould, dry filters etc
@@ -2574,7 +2579,7 @@ bool IRac::sendAc(const decode_type_t vendor, const int16_t model,
                   const bool beep, const int16_t sleep, const int16_t clock) {
   stdAc::state_t to_send;
   initState(&to_send, vendor, model, power, mode, degrees, celsius, fan, swingv,
-            swingh, quiet, turbo, econo, light, filter, clean, beep, sleep,
+            swingh, quiet, turbo, econo, breeze, light, filter, clean, beep, sleep,
             clock);
   return this->sendAc(to_send, &to_send);
 }
@@ -2991,7 +2996,7 @@ bool IRac::sendAc(const stdAc::state_t desired, const stdAc::state_t *prev) {
     {
       IRSamsungAc ac(_pin, _inverted, _modulation);
       samsung(&ac, send.power, send.mode, degC, send.fanspeed, send.swingv,
-              send.swingh, send.quiet, send.turbo, send.econo, send.light,
+              send.swingh, send.quiet, send.turbo, send.econo, send.breeze, send.light,
               send.filter, send.clean, send.beep, send.sleep,
               prev_power, prev_sleep);
       break;
@@ -3158,7 +3163,7 @@ bool IRac::cmpStates(const stdAc::state_t a, const stdAc::state_t b) {
       a.mode != b.mode || a.degrees != b.degrees || a.celsius != b.celsius ||
       a.fanspeed != b.fanspeed || a.swingv != b.swingv ||
       a.swingh != b.swingh || a.quiet != b.quiet || a.turbo != b.turbo ||
-      a.econo != b.econo || a.light != b.light || a.filter != b.filter ||
+      a.econo != b.econo || a.breeze != b.breeze || a.light != b.light || a.filter != b.filter ||
       a.clean != b.clean || a.beep != b.beep || a.sleep != b.sleep;
 }
 
